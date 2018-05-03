@@ -11,7 +11,7 @@
 `Python` 操作系统默认安装，此处不再多说，至于 `Java` 的依赖包 `JDK` 网上有很多安装教程，
 请自行百度或者Google。此处重点关注 `Thrift` 的安装。
 
-1. 首先，安装一些必要的工具和包：   
+- 首先，安装一些必要的工具和包：   
 ```
     $ tar -zxvf  apache-ant-1.9.0-bin.tar.gz
     $ vim /etc/profile
@@ -34,7 +34,7 @@
     $ sudo ./b2 install 
 ```
 
-2. Thrift 安装  
+- Thrift 安装  
 
 ```
     $ wget http://mirrors.tuna.tsinghua.edu.cn/apache/thrift/0.11.0/thrift-0.11.0.tar.gz
@@ -48,7 +48,9 @@
     /usr/local/bin/thrift
     则表示安装完成
 ```
+附，安装截图：   
+![执行configure 命令之后的截图](./image/debian_thrift_install.jpg)
 
-3. 也可能是版本等其他原因，`Thrift` 的安装比较麻烦，经常出现安装不成功的情况。一定要自己多动手，多进行 Google 查询解决安装中的问题
+- 也可能是版本等其他原因，`Thrift` 的安装比较麻烦，经常出现安装不成功的情况。一定要自己多动手，多进行 Google 查询解决安装中的问题
 
 
