@@ -1,9 +1,9 @@
 # JAVA NIO Tutorial
 
-Java NIO (New IO) 从 JDK 1.4 开始提供了一种可选择的 IO API。可选择的含义是针对 Java 标准 IO 和 Java
-网络 IO 而言的。Java NIO 提供了一种相比于标准 IO 不同的处理 IO 的方式。
+Java NIO (New IO) 从 JDK 1.4 开始提供了一种可替的 IO API。可替代的含义是针对 Java 标准 IO 和 Java
+网络 IO 而言的。Java NIO 提供了一种相比于传统 IO 不同的处理 IO 的方式。
 
-### Java NIO: 通道和缓冲 (Channels and Buffers)
+### Java NIO: 通道和缓冲区 (Channels and Buffers)
 
 传统的 IO API 针对的是字节流和字符流的，而 NIO 针对的是 channels 和 buffers。数据的读操作是
 从 channel 到 buffer，写操作是从 buffer 到 channel。
