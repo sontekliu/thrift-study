@@ -140,6 +140,85 @@ Channel 变成就绪状态。当你调用 select() 方法返回 1， 说明只�
 方法，如果另一个通道准备就绪了，将再次返回 1。如果第一个准备就绪的 Channel 没有做任何操作，现在就有 2 个就绪
 的通道，但是在每次调用 select() 之间只有一个 Channel 就绪。
 
+###### Selection Keys
+一旦你调用了 select() 方法，它的返回值则表明了有一个或者多个 channel 准备就绪，然后你可以通过调用 selector 
+的 selectedKeys() 方法访问"已选择健集"中准备就绪的通道，代码如下：
+```
+Set<SelectionKey> selectedKeys = selector.selectedKeys();    
+```
+当你向 Selector 注册一个 Channel 时，Channel.register() 方法返回一个 SelectionKey 对象。这个对象
+代表了注册到该 selector 的 Channel。可以通过 selectedKeySet() 方法访问这些对象。
+
+你可以迭代已选择的健集合来访问那些已准备就绪的 Channel。代码如下：
+```
+Set<SelectionKey> selectedKeys = selector.selectedKeys();
+Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+while(keyIterator.hasNext()) {
+    SelectionKey key = keyIterator.next();
+    if(key.isAcceptable()) {
+        // a connection was accepted by a ServerSocketChannel.
+    } else if (key.isConnectable()) {
+        // a connection was established with a remote server.
+    } else if (key.isReadable()) {
+        // a channel is ready for reading
+    } else if (key.isWritable()) {
+        // a channel is ready for writing
+    }
+    keyIterator.remove();
+}
+```
+这个循环遍历已选择健集合中的健，并检测每一个健对应的 Channel 准备就绪。
+
+注意，在每次迭代末尾 keyIterator.remove() 方法的调用，Selector 不会自己从已选择的健集合中移除
+SelectionKey 实例。必须在处理完 Channel 时自己移除。当下次 Channel 变成 "ready" 状态时，Selector
+将会再将其加入到已选择健集合中。
+SelectionKey.channel() 返回的 channel 对象可以被转化成你需要处理的类型，如 ServerSocketChannel，
+SocketChannel 等。
+
+###### wakeUp()
+调用了 select() 方法并且已阻塞的线程，即使没有 Channel 准备就绪，也可以使其从 select() 方法返回。只要
+有其他线程调用第一个线程调用 select() 方法的那个对象上调用 wakeup() 方法即可。阻塞在 select() 方法的线
+程会立刻返回。
+
+如果其他线程调用了 wakeup() 方法，并且当前没有线程阻塞在 select() 方法上，那么下一个调用 select() 方法
+的线程会立刻"醒来"。
+
+####### close()
+当你用完 Selector 并且调用其 close() 方法，这将会关闭 Selector，并且注册到该 Selector 上所有的 
+SelectionKey 实例无效，但是 Channel 本身不会关闭。
+
+### 完整的 Selector 示例
+这里有一个完整的示例，打开一个 Selector，注册一个 Channel （Channel 的初始化过程忽略），持续监听这个
+Selector 上的四个事件（接受，连接，读，写）是否准备就绪。
+
+```
+Selector selector = Selector.open();
+channel.configureBlocking(false);
+SelectionKey key = channel.register(selector, SelectionKey.OP_READ);
+
+while(true) {
+  int readyChannels = selector.select();
+  if(readyChannels == 0) continue;
+
+  Set<SelectionKey> selectedKeys = selector.selectedKeys();
+  Iterator<SelectionKey> keyIterator = selectedKeys.iterator();
+  
+  while(keyIterator.hasNext()) {
+    SelectionKey key = keyIterator.next();
+    if(key.isAcceptable()) {
+        // a connection was accepted by a ServerSocketChannel.
+    } else if (key.isConnectable()) {
+        // a connection was established with a remote server.
+    } else if (key.isReadable()) {
+        // a channel is ready for reading
+    } else if (key.isWritable()) {
+        // a channel is ready for writing
+    }
+    keyIterator.remove();
+  }
+}
+```
+
 
 
 
