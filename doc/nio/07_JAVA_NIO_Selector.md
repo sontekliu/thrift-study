@@ -63,6 +63,116 @@ int interestSet = SelectionKey.OP_READ | SelectionKey.OP_WRITE;
 
 ### SelectionKey's 
 
+在上一小节中，当你通过 register() 方法将 Channel 注册到 Selector 上，register() 返回一个 SelectionKey 对象，
+SelectionKey 对象包含以下有趣的属性：   
+> interest 集合  
+> ready 集合   
+> Channel  
+> Selector  
+> 附加对象(可选)  
+
+下面会对这些属性进行简单的描述。
+
+##### interest 集合
+
+就像“注册 Channel 到 Selector” 章节中描述的那样，interest 集合是你选择的感兴趣事件的集合，
+你可以通过 SelectionKey 读写 interest 集合，就像这样：  
+```
+int interestSet = selectionKey.interestOps();
+
+boolean isInterestedInAccept  = (interestSet & SelectionKey.OP_ACCEPT) == SelectionKey.OP_ACCEPT;
+boolean isInterestedInConnect = (interestSet & SelectionKey.OP_CONNECT) == SelectionKey.OP_CONNECT;
+boolean isInterestedInRead    = (interestSet & SelectionKey.OP_READ) == SelectionKey.OP_READ;
+boolean isInterestedInWrite   = (interestSet & SelectionKey.OP_WRITE) == SelectionKey.OP_WRITE;    
+```
+你可以看到，你可以用“与”操作 interest 集合和给定的 SelectionKey 常量，来确定某个事件是否在 interest 集合中。
+
+##### ready 集合
+ready 集合是通道已经准备就绪的操作的集合。在一次选择之后，你会首先访问 ready 集合，Selection 将在下一节讲解，你
+可以通过如下方式访问 ready 集合：
+
+```
+int readySet = selectionKey.readyOps();
+```
+你可以用像检测 interest 集合那样的方法来检测 Channel 中什么事件或者操作准备就绪。但是，你也可以使用如下四个
+方法，他们都返回 boolean 值：  
+```
+selectionKey.isAcceptable();
+selectionKey.isConnectable();
+selectionKey.isReadable();
+selectionKey.isWritable();
+```
+
+##### Channel + Selector
+从 SelectionKey 访问 channel 和 selector 是很简单的，如下：
+```
+Channel  channel  = selectionKey.channel();
+Selector selector = selectionKey.selector();    
+```
+
+##### 附加对象
+你可以将对象附加到 SelectionKey 上，这是识别给定的 Channel 或者将更多的信息附加到 Channel 的便捷方式。例如，
+你可以附加与通道一起使用的 Buffer ，或者是包含聚集数据的某个对象。下面就是如何附加对象：
+```
+selectionKey.attach(theObject);
+
+Object attachedObj = selectionKey.attachment();
+```
+你也可以在用 register 方法向 Selector 注册 Channel 的时候附加一个对象，代码如下：
+```
+SelectionKey key = channel.register(selector, SelectionKey.OP_READ, theObject);
+```
+
+### 通过 Selector 选择 Channel
+一旦你向 Selector 注册了一个或者多个 Channel，你就可以调用几个重载 select() 方法。这些方法将返回你感兴趣的事件
+（连接，接受，读或写）已准备就绪的通道。换句话说，如果你对读就绪的 Channel 感兴趣，那么 select() 方法将返回读就绪
+的那些 Channel。下面是 select() 方法：  
+> int select()  
+> int select(long timeout)  
+> int selectNow()  
+
+select() 会一直阻塞到至少有一个 Channel 在你注册的事件上准备就绪了。  
+select(long timeout) 和 select() 方法一样，除了最长会阻塞 timeout 毫秒（参数）。  
+selectNow() 不会被阻塞，自从前一次选择操作之后，没有通道变成可选择的，则直接返回 0.
+
+select() 返回的 int 值则表示有多少个 Channel 已经就绪，也就是，自从上次调用 select() 方法之后，又有多少
+Channel 变成就绪状态。当你调用 select() 方法返回 1， 说明只有一个 Channel 准备就绪，你再次调用 select()
+方法，如果另一个通道准备就绪了，将再次返回 1。如果第一个准备就绪的 Channel 没有做任何操作，现在就有 2 个就绪
+的通道，但是在每次调用 select() 之间只有一个 Channel 就绪。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
