@@ -3,6 +3,8 @@
 Java NIO FileChannel 是链接文件的通道，使用文件 Channel 你可以从文件中读取数据，也可也
 将数据写入到文件中，Java NIO FileChannel 是替代标准的 Java IO 读取文件的一种方式。
 
+FileChannel 不能设置成非阻塞模式，它只能运行在阻塞的模式下。
+
 ### Opening a FileChannel
 在使用 FileChannel 之前，你必须先打开它，但是你不能直接打开它，需要通过 InputStream,
 OutputStream 或者 RandomAccessFile 来获取 FileChannel 的实例，如下是通过RandomAccessFile
