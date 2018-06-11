@@ -2,7 +2,7 @@
 1. Java NIO  
 	> http://tutorials.jenkov.com/java-nio/index.html
 2. Java 并发编程  
-    > Java 并发编程艺术  
+    > Java 并发编程艺术   
     > Java 并发编程实战  
     > Java Performance  
 3. Java 设计模式  
