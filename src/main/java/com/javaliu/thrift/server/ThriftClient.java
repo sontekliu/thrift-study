@@ -4,6 +4,7 @@ import com.javaliu.thrift.service.Student;
 import com.javaliu.thrift.service.StudentService;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TFastFramedTransport;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
@@ -11,7 +12,7 @@ import org.apache.thrift.transport.TTransport;
 public class ThriftClient {
 
     public static void main(String[] args) {
-        TTransport tTransport = new TFramedTransport(new TSocket("localhost", 8888), 600);
+        TTransport tTransport = new TFastFramedTransport(new TSocket("localhost", 8888), 600);
         TProtocol protocol = new TCompactProtocol(tTransport);
 
         StudentService.Client client = new StudentService.Client(protocol);

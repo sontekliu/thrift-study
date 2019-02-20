@@ -6,6 +6,7 @@ import org.apache.thrift.TProcessorFactory;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.THsHaServer;
 import org.apache.thrift.server.TServer;
+import org.apache.thrift.transport.TFastFramedTransport;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TNonblockingServerSocket;
 
@@ -19,7 +20,7 @@ public class ThriftServer {
         StudentService.Processor<StudentServiceImpl> processor = new StudentService.Processor<StudentServiceImpl>(new StudentServiceImpl());
 
         server.protocolFactory(new TCompactProtocol.Factory());
-        server.transportFactory(new TFramedTransport.Factory());
+        server.transportFactory(new TFastFramedTransport.Factory());
         server.processorFactory(new TProcessorFactory(processor));
 
         TServer tServer = new THsHaServer(server);
