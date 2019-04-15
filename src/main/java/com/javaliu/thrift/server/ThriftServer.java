@@ -1,13 +1,12 @@
 package com.javaliu.thrift.server;
 
-import com.javaliu.thrift.service.StudentService;
-import com.javaliu.thrift.service.impl.StudentServiceImpl;
+import com.javaliu.thrift.service.UserService;
+import com.javaliu.thrift.service.impl.UserServiceImpl;
 import org.apache.thrift.TProcessorFactory;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.THsHaServer;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.transport.TFastFramedTransport;
-import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TNonblockingServerSocket;
 
 public class ThriftServer {
@@ -17,7 +16,7 @@ public class ThriftServer {
         THsHaServer.Args server = new THsHaServer.Args(socket)
                 .minWorkerThreads(2)
                 .maxWorkerThreads(4);
-        StudentService.Processor<StudentServiceImpl> processor = new StudentService.Processor<StudentServiceImpl>(new StudentServiceImpl());
+        UserService.Processor<UserServiceImpl> processor = new UserService.Processor<UserServiceImpl>(new UserServiceImpl());
 
         server.protocolFactory(new TCompactProtocol.Factory());
         server.transportFactory(new TFastFramedTransport.Factory());

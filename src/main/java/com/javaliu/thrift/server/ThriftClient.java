@@ -1,11 +1,10 @@
 package com.javaliu.thrift.server;
 
-import com.javaliu.thrift.service.Student;
-import com.javaliu.thrift.service.StudentService;
+import com.javaliu.thrift.service.User;
+import com.javaliu.thrift.service.UserService;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TFastFramedTransport;
-import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 
@@ -15,22 +14,24 @@ public class ThriftClient {
         TTransport tTransport = new TFastFramedTransport(new TSocket("localhost", 8888), 600);
         TProtocol protocol = new TCompactProtocol(tTransport);
 
-        StudentService.Client client = new StudentService.Client(protocol);
+        UserService.Client client = new UserService.Client(protocol);
 
         try{
             tTransport.open();
-            Student student = client.findStudentById(2);
-            System.out.println(student.getId());
-            System.out.println(student.getName());
-            System.out.println(student.isSex());
+            User user = client.findUserById(2);
+            System.out.println(user.getId());
+            System.out.println(user.getCode());
+            System.out.println(user.getName());
+            System.out.println(user.getEmail());
 
             System.out.println("-----------");
 
-            Student student1 = new Student();
-            student1.setId(23);
-            student1.setName("李四");
-            student1.setSex(false);
-            client.saveStudent(student1);
+            User user1 = new User();
+            user1.setId(23);
+            user1.setCode("lisi");
+            user1.setName("李四");
+            user1.setEmail("lisi@163.com");
+            client.saveUser(user1);
         } catch (Exception e){
             e.printStackTrace();
         } finally {
